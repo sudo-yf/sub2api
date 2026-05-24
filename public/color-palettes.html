@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>色系方案对比</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0a0a0a; color:#e5e5e5; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; padding:32px; }
+  .page-title { font-size:11px; font-weight:600; color:#404040; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:32px; }
+  .scheme { margin-bottom:48px; border:1px solid #1f1f1f; border-radius:14px; overflow:hidden; }
+  .scheme-head { padding:18px 22px 14px; background:#111; border-bottom:1px solid #1a1a1a; display:flex; align-items:flex-start; gap:16px; }
+  .scheme-num { font-size:10px; font-weight:700; letter-spacing:0.1em; color:#404040; text-transform:uppercase; width:64px; flex-shrink:0; padding-top:3px; }
+  .scheme-title { font-size:17px; font-weight:700; letter-spacing:-0.02em; margin-bottom:4px; }
+  .scheme-sub { font-size:12px; color:#525252; line-height:1.5; }
+  .scheme-body { padding:20px 22px; background:#0d0d0d; }
+  .swatches { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+  .sw { text-align:center; }
+  .sw-box { width:48px; height:48px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); margin-bottom:5px; }
+  .sw-name { font-size:9px; color:#404040; font-family:'SF Mono',monospace; line-height:1.4; }
+  .cards { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px; }
+  .card { background:#111; border:1px solid #1f1f1f; border-radius:10px; padding:14px; }
+  .icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; margin-bottom:10px; }
+  .val { font-size:20px; font-weight:700; letter-spacing:-0.03em; color:#f5f5f5; }
+  .lbl { font-size:11px; color:#525252; margin-top:2px; }
+  .badges { display:flex; gap:6px; flex-wrap:wrap; }
+  .badge { padding:3px 9px; border-radius:20px; font-size:11px; font-weight:500; border:1px solid transparent; }
+  hr { border:none; border-top:1px solid #181818; margin:4px 0 16px; }
+  .row-label { font-size:10px; color:#333; text-transform:uppercase; letter-spacing:0.08em; font-weight:600; margin-bottom:8px; }
+</style>
+</head>
+<body>
+
+<div class="page-title">色系方案对比 ─ 在黑色主题上的实际效果</div>
+
+<!-- 方案 1 莫兰迪 -->
+<div class="scheme">
+  <div class="scheme-head">
+    <div class="scheme-num">方案 1</div>
+    <div>
+      <div class="scheme-title" style="color:#b8a9a0;">莫兰迪色系 Morandi</div>
+      <div class="scheme-sub">源自意大利画家 Giorgio Morandi，每个颜色像混入了一定比例的灰。色相清晰，饱和度低，视觉安静但有区分度。</div>
+    </div>
+  </div>
+  <div class="scheme-body">
+    <div class="row-label">色板</div>
+    <div class="swatches">
+      <div class="sw"><div class="sw-box" style="background:#9c8fa0;"></div><div class="sw-name">雾紫 #9c8fa0</div></div>
+      <div class="sw"><div class="sw-box" style="background:#8fa0a6;"></div><div class="sw-name">烟蓝 #8fa0a6</div></div>
+      <div class="sw"><div class="sw-box" style="background:#8fa898;"></div><div class="sw-name">淡苔 #8fa898</div></div>
+      <div class="sw"><div class="sw-box" style="background:#b5a58c;"></div><div class="sw-name">米驼 #b5a58c</div></div>
+      <div class="sw"><div class="sw-box" style="background:#a89090;"></div><div class="sw-name">玫灰 #a89090</div></div>
+      <div class="sw"><div class="sw-box" style="background:#9099a8;"></div><div class="sw-name">石青 #9099a8</div></div>
+      <div class="sw"><div class="sw-box" style="background:#a8a090;"></div><div class="sw-name">黄灰 #a8a090</div></div>
+      <div class="sw"><div class="sw-box" style="background:#9aa08f;"></div><div class="sw-name">草灰 #9aa08f</div></div>
+    </div>
+    <hr>
+    <div class="row-label">Stat 卡片</div>
+    <div class="cards">
+      <div class="card"><div class="icon" style="background:rgba(156,143,160,0.15);">⚡</div><div class="val">1,284</div><div class="lbl">今日请求</div></div>
+      <div class="card"><div class="icon" style="background:rgba(143,160,166,0.15);">👤</div><div class="val">348</div><div class="lbl">活跃用户</div></div>
+      <div class="card"><div class="icon" style="background:rgba(181,165,140,0.15);">💰</div><div class="val">$42.5</div><div class="lbl">今日消费</div></div>
+      <div class="card"><div class="icon" style="background:rgba(143,168,152,0.15);">📊</div><div class="val">99.2%</div><div class="lbl">成功率</div></div>
+    </div>
+    <div class="row-label" style="margin-top:14px;">平台 / 模型标签</div>
+    <div class="badges">
+      <span class="badge" style="background:rgba(181,165,140,0.12);border-color:rgba(181,165,140,0.22);color:rgba(181,165,140,0.9);">Anthropic</span>
+      <span class="badge" style="background:rgba(143,168,152,0.12);border-color:rgba(143,168,152,0.22);color:rgba(143,168,152,0.9);">OpenAI</span>
+      <span class="badge" style="background:rgba(156,143,160,0.12);border-color:rgba(156,143,160,0.22);color:rgba(156,143,160,0.9);">Antigravity</span>
+      <span class="badge" style="background:rgba(143,160,166,0.12);border-color:rgba(143,160,166,0.22);color:rgba(143,160,166,0.9);">Gemini</span>
+      <span class="badge" style="background:rgba(156,143,160,0.12);border-color:rgba(156,143,160,0.22);color:rgba(156,143,160,0.9);">Sonnet 4.6</span>
+      <span class="badge" style="background:rgba(168,160,144,0.12);border-color:rgba(168,160,144,0.22);color:rgba(168,160,144,0.9);">GPT-5</span>
+    </div>
+  </div>
+</div>
+
+<!-- 方案 2 马卡龙 -->
+<div class="scheme">
+  <div class="scheme-head">
+    <div class="scheme-num">方案 2</div>
+    <div>
+      <div class="scheme-title" style="color:#f4a7b9;">马卡龙色系 Macaron</div>
+      <div class="scheme-sub">粉嫩奶油感，法式甜点调色，高亮度低饱和。暗色模式用低透明度叠加，保留色相同时不过曝。</div>
+    </div>
+  </div>
+  <div class="scheme-body">
+    <div class="row-label">色板</div>
+    <div class="swatches">
+      <div class="sw"><div class="sw-box" style="background:#f4a7b9;"></div><div class="sw-name">草莓粉 #f4a7b9</div></div>
+      <div class="sw"><div class="sw-box" style="background:#a8d8ea;"></div><div class="sw-name">天空蓝 #a8d8ea</div></div>
+      <div class="sw"><div class="sw-box" style="background:#b8e0d2;"></div><div class="sw-name">薄荷绿 #b8e0d2</div></div>
+      <div class="sw"><div class="sw-box" style="background:#ffd3b6;"></div><div class="sw-name">蜜桃橙 #ffd3b6</div></div>
+      <div class="sw"><div class="sw-box" style="background:#d4b8e0;"></div><div class="sw-name">薰衣草 #d4b8e0</div></div>
+      <div class="sw"><div class="sw-box" style="background:#ffe5b4;"></div><div class="sw-name">柠檬黄 #ffe5b4</div></div>
+      <div class="sw"><div class="sw-box" style="background:#c8e6c9;"></div><div class="sw-name">开心果 #c8e6c9</div></div>
+      <div class="sw"><div class="sw-box" style="background:#b3d9f7;"></div><div class="sw-name">冰蓝 #b3d9f7</div></div>
+    </div>
+    <hr>
+    <div class="row-label">Stat 卡片</div>
+    <div class="cards">
+      <div class="card"><div class="icon" style="background:rgba(168,216,234,0.14);">⚡</div><div class="val">1,284</div><div class="lbl">今日请求</div></div>
+      <div class="card"><div class="icon" style="background:rgba(212,184,224,0.14);">👤</div><div class="val">348</div><div class="lbl">活跃用户</div></div>
+      <div class="card"><div class="icon" style="background:rgba(255,211,182,0.14);">💰</div><div class="val">$42.5</div><div class="lbl">今日消费</div></div>
+      <div class="card"><div class="icon" style="background:rgba(184,224,210,0.14);">📊</div><div class="val">99.2%</div><div class="lbl">成功率</div></div>
+    </div>
+    <div class="row-label" style="margin-top:14px;">平台 / 模型标签</div>
+    <div class="badges">
+      <span class="badge" style="background:rgba(255,211,182,0.12);border-color:rgba(255,185,140,0.25);color:rgba(255,185,140,0.95);">Anthropic</span>
+      <span class="badge" style="background:rgba(184,224,210,0.12);border-color:rgba(150,210,185,0.25);color:rgba(150,210,185,0.95);">OpenAI</span>
+      <span class="badge" style="background:rgba(212,184,224,0.12);border-color:rgba(200,160,218,0.25);color:rgba(200,160,218,0.95);">Antigravity</span>
+      <span class="badge" style="background:rgba(168,216,234,0.12);border-color:rgba(140,200,225,0.25);color:rgba(140,200,225,0.95);">Gemini</span>
+      <span class="badge" style="background:rgba(212,184,224,0.12);border-color:rgba(200,160,218,0.25);color:rgba(200,160,218,0.95);">Sonnet 4.6</span>
+      <span class="badge" style="background:rgba(255,229,180,0.12);border-color:rgba(240,200,130,0.25);color:rgba(240,200,130,0.95);">GPT-5</span>
+    </div>
+  </div>
+</div>
+
+<!-- 方案 3 赛博朋克 -->
+<div class="scheme">
+  <div class="scheme-head">
+    <div class="scheme-num">方案 3</div>
+    <div>
+      <div class="scheme-title" style="color:#00fff7;">赛博朋克 Cyberpunk</div>
+      <div class="scheme-sub">霓虹色调，电青/洋红/电紫/荧光绿。黑色背景下视觉冲击力强，科技感极强，适合 API 工具/hacker 风格。</div>
+    </div>
+  </div>
+  <div class="scheme-body">
+    <div class="row-label">色板</div>
+    <div class="swatches">
+      <div class="sw"><div class="sw-box" style="background:#00fff7;"></div><div class="sw-name">电青 #00fff7</div></div>
+      <div class="sw"><div class="sw-box" style="background:#ff00c8;"></div><div class="sw-name">洋红 #ff00c8</div></div>
+      <div class="sw"><div class="sw-box" style="background:#b000ff;"></div><div class="sw-name">电紫 #b000ff</div></div>
+      <div class="sw"><div class="sw-box" style="background:#00ff88;"></div><div class="sw-name">荧光绿 #00ff88</div></div>
+      <div class="sw"><div class="sw-box" style="background:#ffcc00;"></div><div class="sw-name">电黄 #ffcc00</div></div>
+      <div class="sw"><div class="sw-box" style="background:#0080ff;"></div><div class="sw-name">电蓝 #0080ff</div></div>
+      <div class="sw"><div class="sw-box" style="background:#ff4400;"></div><div class="sw-name">熔岩红 #ff4400</div></div>
+      <div class="sw"><div class="sw-box" style="background:#40ffff;"></div><div class="sw-name">冰青 #40ffff</div></div>
+    </div>
+    <hr>
+    <div class="row-label">Stat 卡片（低透明度）</div>
+    <div class="cards">
+      <div class="card"><div class="icon" style="background:rgba(0,255,247,0.08);">⚡</div><div class="val">1,284</div><div class="lbl">今日请求</div></div>
+      <div class="card"><div class="icon" style="background:rgba(176,0,255,0.10);">👤</div><div class="val">348</div><div class="lbl">活跃用户</div></div>
+      <div class="card"><div class="icon" style="background:rgba(255,204,0,0.08);">💰</div><div class="val">$42.5</div><div class="lbl">今日消费</div></div>
+      <div class="card"><div class="icon" style="background:rgba(0,255,136,0.08);">📊</div><div class="val">99.2%</div><div class="lbl">成功率</div></div>
+    </div>
+    <div class="row-label" style="margin-top:14px;">平台 / 模型标签</div>
+    <div class="badges">
+      <span class="badge" style="background:rgba(255,68,0,0.10);border-color:rgba(255,68,0,0.25);color:rgba(255,100,40,0.9);">Anthropic</span>
+      <span class="badge" style="background:rgba(0,255,136,0.08);border-color:rgba(0,255,136,0.2);color:rgba(0,220,120,0.9);">OpenAI</span>
+      <span class="badge" style="background:rgba(176,0,255,0.10);border-color:rgba(176,0,255,0.25);color:rgba(200,80,255,0.9);">Antigravity</span>
+      <span class="badge" style="background:rgba(0,255,247,0.08);border-color:rgba(0,255,247,0.2);color:rgba(0,220,215,0.9);">Gemini</span>
+      <span class="badge" style="background:rgba(0,128,255,0.10);border-color:rgba(0,128,255,0.25);color:rgba(60,160,255,0.9);">Sonnet 4.6</span>
+      <span class="badge" style="background:rgba(255,204,0,0.08);border-color:rgba(255,204,0,0.2);color:rgba(240,190,0,0.9);">GPT-5</span>
+    </div>
+  </div>
+</div>
+
+<!-- 方案 4 Nord -->
+<div class="scheme">
+  <div class="scheme-head">
+    <div class="scheme-num">方案 4</div>
+    <div>
+      <div class="scheme-title" style="color:#88c0d0;">Nord 北欧冷调</div>
+      <div class="scheme-sub">开源色系 nordtheme.com，专为深色界面设计。冷蓝灰底 + Aurora 极光强调色（青/蓝/紫/绿/红/橙），协调统一，被大量编辑器采用。</div>
+    </div>
+  </div>
+  <div class="scheme-body">
+    <div class="row-label">Aurora 强调色（Nord 8-15）</div>
+    <div class="swatches">
+      <div class="sw"><div class="sw-box" style="background:#88c0d0;"></div><div class="sw-name">Frost 青 #88c0d0</div></div>
+      <div class="sw"><div class="sw-box" style="background:#81a1c1;"></div><div class="sw-name">Frost 蓝 #81a1c1</div></div>
+      <div class="sw"><div class="sw-box" style="background:#bf616a;"></div><div class="sw-name">Aurora 红 #bf616a</div></div>
+      <div class="sw"><div class="sw-box" style="background:#d08770;"></div><div class="sw-name">Aurora 橙 #d08770</div></div>
+      <div class="sw"><div class="sw-box" style="background:#ebcb8b;"></div><div class="sw-name">Aurora 黄 #ebcb8b</div></div>
+      <div class="sw"><div class="sw-box" style="background:#a3be8c;"></div><div class="sw-name">Aurora 绿 #a3be8c</div></div>
+      <div class="sw"><div class="sw-box" style="background:#b48ead;"></div><div class="sw-name">Aurora 紫 #b48ead</div></div>
+      <div class="sw"><div class="sw-box" style="background:#5e81ac;"></div><div class="sw-name">Frost 深蓝 #5e81ac</div></div>
+    </div>
+    <hr>
+    <div class="row-label">Stat 卡片</div>
+    <div class="cards">
+      <div class="card"><div class="icon" style="background:rgba(136,192,208,0.12);">⚡</div><div class="val">1,284</div><div class="lbl">今日请求</div></div>
+      <div class="card"><div class="icon" style="background:rgba(180,142,173,0.12);">👤</div><div class="val">348</div><div class="lbl">活跃用户</div></div>
+      <div class="card"><div class="icon" style="background:rgba(235,203,139,0.12);">💰</div><div class="val">$42.5</div><div class="lbl">今日消费</div></div>
+      <div class="card"><div class="icon" style="background:rgba(163,190,140,0.12);">📊</div><div class="val">99.2%</div><div class="lbl">成功率</div></div>
+    </div>
+    <div class="row-label" style="margin-top:14px;">平台 / 模型标签</div>
+    <div class="badges">
+      <span class="badge" style="background:rgba(208,135,112,0.12);border-color:rgba(208,135,112,0.22);color:rgba(208,135,112,0.9);">Anthropic</span>
+      <span class="badge" style="background:rgba(163,190,140,0.12);border-color:rgba(163,190,140,0.22);color:rgba(163,190,140,0.9);">OpenAI</span>
+      <span class="badge" style="background:rgba(180,142,173,0.12);border-color:rgba(180,142,173,0.22);color:rgba(180,142,173,0.9);">Antigravity</span>
+      <span class="badge" style="background:rgba(136,192,208,0.12);border-color:rgba(136,192,208,0.22);color:rgba(136,192,208,0.9);">Gemini</span>
+      <span class="badge" style="background:rgba(129,161,193,0.12);border-color:rgba(129,161,193,0.22);color:rgba(129,161,193,0.9);">Sonnet 4.6</span>
+      <span class="badge" style="background:rgba(235,203,139,0.12);border-color:rgba(235,203,139,0.22);color:rgba(235,203,139,0.9);">GPT-5</span>
+    </div>
+  </div>
+</div>
+
+<!-- 方案 5 Catppuccin Mocha -->
+<div class="scheme">
+  <div class="scheme-head">
+    <div class="scheme-num">方案 5 ★</div>
+    <div>
+      <div class="scheme-title" style="color:#cba6f7;">Catppuccin Mocha</div>
+      <div class="scheme-sub">当下最流行的深色主题色系（github.com/catppuccin）。暖紫棕底色 + 多彩强调色，饱和度适中，色相丰富但整体调性统一。被数千款工具采用，区分度高且不刺眼。</div>
+    </div>
+  </div>
+  <div class="scheme-body">
+    <div class="row-label">强调色（Mocha Accents）</div>
+    <div class="swatches">
+      <div class="sw"><div class="sw-box" style="background:#f38ba8;"></div><div class="sw-name">Red #f38ba8</div></div>
+      <div class="sw"><div class="sw-box" style="background:#fab387;"></div><div class="sw-name">Peach #fab387</div></div>
+      <div class="sw"><div class="sw-box" style="background:#f9e2af;"></div><div class="sw-name">Yellow #f9e2af</div></div>
+      <div class="sw"><div class="sw-box" style="background:#a6e3a1;"></div><div class="sw-name">Green #a6e3a1</div></div>
+      <div class="sw"><div class="sw-box" style="background:#94e2d5;"></div><div class="sw-name">Teal #94e2d5</div></div>
+      <div class="sw"><div class="sw-box" style="background:#89dceb;"></div><div class="sw-name">Sky #89dceb</div></div>
+      <div class="sw"><div class="sw-box" style="background:#89b4fa;"></div><div class="sw-name">Blue #89b4fa</div></div>
+      <div class="sw"><div class="sw-box" style="background:#cba6f7;"></div><div class="sw-name">Mauve #cba6f7</div></div>
+    </div>
+    <hr>
+    <div class="row-label">Stat 卡片</div>
+    <div class="cards">
+      <div class="card"><div class="icon" style="background:rgba(137,180,250,0.12);">⚡</div><div class="val">1,284</div><div class="lbl">今日请求</div></div>
+      <div class="card"><div class="icon" style="background:rgba(203,166,247,0.12);">👤</div><div class="val">348</div><div class="lbl">活跃用户</div></div>
+      <div class="card"><div class="icon" style="background:rgba(249,226,175,0.12);">💰</div><div class="val">$42.5</div><div class="lbl">今日消费</div></div>
+      <div class="card"><div class="icon" style="background:rgba(166,227,161,0.12);">📊</div><div class="val">99.2%</div><div class="lbl">成功率</div></div>
+    </div>
+    <div class="row-label" style="margin-top:14px;">平台 / 模型标签</div>
+    <div class="badges">
+      <span class="badge" style="background:rgba(250,179,135,0.12);border-color:rgba(250,179,135,0.22);color:rgba(250,179,135,0.9);">Anthropic</span>
+      <span class="badge" style="background:rgba(166,227,161,0.12);border-color:rgba(166,227,161,0.22);color:rgba(166,227,161,0.9);">OpenAI</span>
+      <span class="badge" style="background:rgba(203,166,247,0.12);border-color:rgba(203,166,247,0.22);color:rgba(203,166,247,0.9);">Antigravity</span>
+      <span class="badge" style="background:rgba(137,220,235,0.12);border-color:rgba(137,220,235,0.22);color:rgba(137,220,235,0.9);">Gemini</span>
+      <span class="badge" style="background:rgba(137,180,250,0.12);border-color:rgba(137,180,250,0.22);color:rgba(137,180,250,0.9);">Sonnet 4.6</span>
+      <span class="badge" style="background:rgba(148,226,213,0.12);border-color:rgba(148,226,213,0.22);color:rgba(148,226,213,0.9);">Haiku 4.5</span>
+      <span class="badge" style="background:rgba(249,226,175,0.12);border-color:rgba(249,226,175,0.22);color:rgba(249,226,175,0.9);">GPT-5</span>
+      <span class="badge" style="background:rgba(243,139,168,0.12);border-color:rgba(243,139,168,0.22);color:rgba(243,139,168,0.9);">Error</span>
+    </div>
+  </div>
+</div>
+
+<!-- 方案 6 Tokyo Night -->
+<div class="scheme">
+  <div class="scheme-head">
+    <div class="scheme-num">方案 6</div>
+    <div>
+      <div class="scheme-title" style="color:#7aa2f7;">Tokyo Night</div>
+      <div class="scheme-sub">VSCode/Neovim 热门主题，深蓝夜景色系。蓝/紫/青强调为主，少量暖色点缀，冷调但区分度强。</div>
+    </div>
+  </div>
+  <div class="scheme-body">
+    <div class="row-label">强调色</div>
+    <div class="swatches">
+      <div class="sw"><div class="sw-box" style="background:#7aa2f7;"></div><div class="sw-name">Blue #7aa2f7</div></div>
+      <div class="sw"><div class="sw-box" style="background:#bb9af7;"></div><div class="sw-name">Purple #bb9af7</div></div>
+      <div class="sw"><div class="sw-box" style="background:#7dcfff;"></div><div class="sw-name">Cyan #7dcfff</div></div>
+      <div class="sw"><div class="sw-box" style="background:#9ece6a;"></div><div class="sw-name">Green #9ece6a</div></div>
+      <div class="sw"><div class="sw-box" style="background:#e0af68;"></div><div class="sw-name">Yellow #e0af68</div></div>
+      <div class="sw"><div class="sw-box" style="background:#ff9e64;"></div><div class="sw-name">Orange #ff9e64</div></div>
+      <div class="sw"><div class="sw-box" style="background:#f7768e;"></div><div class="sw-name">Red #f7768e</div></div>
+      <div class="sw"><div class="sw-box" style="background:#73daca;"></div><div class="sw-name">Teal #73daca</div></div>
+    </div>
+    <hr>
+    <div class="row-label">Stat 卡片</div>
+    <div class="cards">
+      <div class="card"><div class="icon" style="background:rgba(122,162,247,0.12);">⚡</div><div class="val">1,284</div><div class="lbl">今日请求</div></div>
+      <div class="card"><div class="icon" style="background:rgba(187,154,247,0.12);">👤</div><div class="val">348</div><div class="lbl">活跃用户</div></div>
+      <div class="card"><div class="icon" style="background:rgba(224,175,104,0.12);">💰</div><div class="val">$42.5</div><div class="lbl">今日消费</div></div>
+      <div class="card"><div class="icon" style="background:rgba(158,206,106,0.12);">📊</div><div class="val">99.2%</div><div class="lbl">成功率</div></div>
+    </div>
+    <div class="row-label" style="margin-top:14px;">平台 / 模型标签</div>
+    <div class="badges">
+      <span class="badge" style="background:rgba(255,158,100,0.12);border-color:rgba(255,158,100,0.22);color:rgba(255,158,100,0.9);">Anthropic</span>
+      <span class="badge" style="background:rgba(115,218,202,0.12);border-color:rgba(115,218,202,0.22);color:rgba(115,218,202,0.9);">OpenAI</span>
+      <span class="badge" style="background:rgba(187,154,247,0.12);border-color:rgba(187,154,247,0.22);color:rgba(187,154,247,0.9);">Antigravity</span>
+      <span class="badge" style="background:rgba(125,207,255,0.12);border-color:rgba(125,207,255,0.22);color:rgba(125,207,255,0.9);">Gemini</span>
+      <span class="badge" style="background:rgba(122,162,247,0.12);border-color:rgba(122,162,247,0.22);color:rgba(122,162,247,0.9);">Sonnet 4.6</span>
+      <span class="badge" style="background:rgba(158,206,106,0.12);border-color:rgba(158,206,106,0.22);color:rgba(158,206,106,0.9);">Haiku 4.5</span>
+      <span class="badge" style="background:rgba(224,175,104,0.12);border-color:rgba(224,175,104,0.22);color:rgba(224,175,104,0.9);">GPT-5</span>
+      <span class="badge" style="background:rgba(247,118,142,0.12);border-color:rgba(247,118,142,0.22);color:rgba(247,118,142,0.9);">Error</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

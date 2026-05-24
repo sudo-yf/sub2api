@@ -1,0 +1,504 @@
+<template>
+  <BaseDialog :show="show" :title="t('admin.groups.rateMultipliersTitle')" width="wide" @close="handleClose">
+    <div v-if="group" class="space-y-4">
+      <!-- 分组信息 -->
+      <div class="flex flex-wrap items-center gap-3 rounded-lg bg-gray-50 px-4 py-2.5 text-sm dark:bg-neutral-900">
+        <span class="inline-flex items-center gap-1.5" :class="platformColorClass">
+          <PlatformIcon :platform="group.platform" size="sm" />
+          {{ t('admin.groups.platforms.' + group.platform) }}
+        </span>
+        <span class="text-neutral-500">|</span>
+        <span class="font-medium text-neutral-100">{{ group.name }}</span>
+        <span class="text-neutral-500">|</span>
+        <span class="text-neutral-400">
+          {{ t('admin.groups.columns.rateMultiplier') }}: {{ group.rate_multiplier }}x
+        </span>
+      </div>
+
+      <!-- 操作区 -->
+      <div class="rounded-lg border border-neutral-800/60 p-3">
+        <!-- 添加用户 -->
+        <h4 class="mb-2 text-sm font-medium text-neutral-300">
+          {{ t('admin.groups.addUserRate') }}
+        </h4>
+        <div class="flex items-end gap-2">
+          <div class="relative flex-1">
+            <input
+              v-model="searchQuery"
+              type="text"
+              autocomplete="off"
+              class="input w-full"
+              :placeholder="t('admin.groups.searchUserPlaceholder')"
+              @input="handleSearchUsers"
+              @focus="showDropdown = true"
+            />
+            <div
+              v-if="showDropdown && searchResults.length > 0"
+              class="absolute left-0 right-0 top-full z-10 mt-1 max-h-48 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-neutral-700/60 dark:bg-neutral-900"
+            >
+              <button
+                v-for="user in searchResults"
+                :key="user.id"
+                type="button"
+                class="flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-[#161616]"
+                @click="selectUser(user)"
+              >
+                <span class="text-neutral-500">#{{ user.id }}</span>
+                <span class="text-neutral-100">{{ user.username || user.email }}</span>
+                <span v-if="user.username" class="text-xs text-neutral-500">{{ user.email }}</span>
+              </button>
+            </div>
+          </div>
+          <div class="w-24">
+            <input
+              v-model.number="newRate"
+              type="number"
+              step="0.001"
+              min="0"
+              autocomplete="off"
+              class="hide-spinner input w-full"
+              placeholder="1.0"
+            />
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary shrink-0"
+            :disabled="!selectedUser || !newRate"
+            @click="handleAddLocal"
+          >
+            {{ t('common.add') }}
+          </button>
+        </div>
+
+        <!-- 批量调整 + 全部清空 -->
+        <div v-if="localEntries.length > 0" class="mt-3 flex items-center gap-3 border-t border-gray-100 pt-3 dark:border-neutral-800/60">
+          <span class="text-xs font-medium text-neutral-400">{{ t('admin.groups.batchAdjust') }}</span>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs text-neutral-500">×</span>
+            <input
+              v-model.number="batchFactor"
+              type="number"
+              step="0.1"
+              min="0"
+              autocomplete="off"
+              class="hide-spinner w-20 rounded border border-gray-200 bg-white px-2 py-1 text-center text-sm transition-colors focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500/20 dark:border-neutral-700/60 dark:bg-neutral-900 dark:focus:border-neutral-500"
+              placeholder="0.5"
+            />
+            <button
+              type="button"
+              class="btn btn-primary btn-sm shrink-0 px-2.5 py-1 text-xs"
+              :disabled="!batchFactor || batchFactor <= 0"
+              @click="applyBatchFactor"
+            >
+              {{ t('admin.groups.applyMultiplier') }}
+            </button>
+          </div>
+          <div class="ml-auto">
+            <button
+              type="button"
+              class="rounded-lg border border-[#bf616a]/20 bg-[#bf616a] px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#bf616a] dark:border-[#bf616a]/25 dark:bg-[#bf616a]/12 dark:text-[#bf616a] dark:hover:bg-[#bf616a]/15"
+              @click="clearAllLocal"
+            >
+              {{ t('admin.groups.clearAll') }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 加载状态 -->
+      <div v-if="loading" class="flex justify-center py-6">
+        <svg class="h-6 w-6 animate-spin text-neutral-500" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+
+      <!-- 已设置的用户列表 -->
+      <div v-else>
+        <h4 class="mb-2 text-sm font-medium text-neutral-300">
+          {{ t('admin.groups.rateMultipliers') }} ({{ localEntries.length }})
+        </h4>
+
+        <div v-if="localEntries.length === 0" class="py-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
+          {{ t('admin.groups.noRateMultipliers') }}
+        </div>
+
+        <div v-else>
+          <!-- 表格 -->
+          <div class="overflow-hidden rounded-lg border border-neutral-800/60">
+            <div class="max-h-[420px] overflow-y-auto">
+              <table class="w-full text-sm">
+                <thead class="sticky top-0 z-[1]">
+                  <tr class="border-b border-neutral-800/60 bg-[#0d0d0d]">
+                    <th class="px-3 py-2 text-left text-xs font-medium text-neutral-400">{{ t('admin.groups.columns.userEmail') }}</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-neutral-400">ID</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-neutral-400">{{ t('admin.groups.columns.userName') }}</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-neutral-400">{{ t('admin.groups.columns.userNotes') }}</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-neutral-400">{{ t('admin.groups.columns.userStatus') }}</th>
+                    <th class="px-3 py-2 text-left text-xs font-medium text-neutral-400">{{ t('admin.groups.columns.rateMultiplier') }}</th>
+                    <th v-if="showFinalRate" class="px-3 py-2 text-left text-xs font-medium text-neutral-300 dark:text-neutral-400">{{ t('admin.groups.finalRate') }}</th>
+                    <th class="w-10 px-2 py-2"></th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-dark-600">
+                  <tr
+                    v-for="entry in paginatedLocalEntries"
+                    :key="entry.user_id"
+                    class="hover:bg-[#161616]/50"
+                  >
+                    <td class="px-3 py-2 text-neutral-400">{{ entry.user_email }}</td>
+                    <td class="whitespace-nowrap px-3 py-2 text-neutral-500 dark:text-neutral-400">{{ entry.user_id }}</td>
+                    <td class="whitespace-nowrap px-3 py-2 text-neutral-100">{{ entry.user_name || '-' }}</td>
+                    <td class="max-w-[160px] truncate px-3 py-2 text-neutral-400" :title="entry.user_notes">{{ entry.user_notes || '-' }}</td>
+                    <td class="whitespace-nowrap px-3 py-2">
+                      <span
+                        :class="[
+                          'inline-flex rounded-full px-2 py-0.5 text-xs font-medium',
+                          entry.user_status === 'active'
+                            ? 'bg-[#a3be8c] text-white dark:bg-[#a3be8c]/12 dark:text-[#a3be8c]'
+                            : 'bg-gray-100 text-gray-600 dark:bg-neutral-800 dark:text-neutral-400'
+                        ]"
+                      >
+                        {{ entry.user_status }}
+                      </span>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-2">
+                      <input
+                        type="number"
+                        step="0.001"
+                        min="0.001"
+                        autocomplete="off"
+                        :value="entry.rate_multiplier ?? ''"
+                        :placeholder="String(props.group?.rate_multiplier ?? 1)"
+                        class="hide-spinner w-20 rounded border border-gray-200 bg-white px-2 py-1 text-center text-sm font-medium transition-colors focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500/20 dark:border-neutral-700/60 dark:bg-neutral-900 dark:focus:border-neutral-500"
+                        @change="updateLocalRate(entry.user_id, ($event.target as HTMLInputElement).value)"
+                      />
+                    </td>
+                    <td v-if="showFinalRate" class="whitespace-nowrap px-3 py-2 font-medium text-neutral-300 dark:text-neutral-400">
+                      {{ computeFinalRate(entry.rate_multiplier) }}
+                    </td>
+                    <td class="px-2 py-2">
+                      <button
+                        type="button"
+                        class="rounded p-1 text-neutral-500 transition-colors hover:bg-[#bf616a] hover:text-red-400/70 dark:hover:bg-[#bf616a]/15 dark:hover:text-red-400"
+                        @click="removeLocal(entry.user_id)"
+                      >
+                        <Icon name="trash" size="sm" />
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 分页 -->
+          <Pagination
+            :total="localEntries.length"
+            :page="currentPage"
+            :page-size="pageSize"
+            @update:page="currentPage = $event"
+            @update:pageSize="handlePageSizeChange"
+          />
+        </div>
+      </div>
+
+      <!-- 底部操作栏 -->
+      <div class="flex items-center gap-3 border-t border-gray-200 pt-4 dark:border-neutral-800/60">
+        <!-- 左侧：未保存提示 + 撤销 -->
+        <template v-if="isDirty">
+          <span class="text-xs text-[#d08770]/80 dark:text-[#d08770]">{{ t('admin.groups.unsavedChanges') }}</span>
+          <button
+            type="button"
+            class="text-xs font-medium text-neutral-300 hover:text-neutral-200 dark:text-neutral-400 dark:hover:text-neutral-300"
+            @click="handleCancel"
+          >
+            {{ t('admin.groups.revertChanges') }}
+          </button>
+        </template>
+        <!-- 右侧：关闭 / 保存 -->
+        <div class="ml-auto flex items-center gap-3">
+          <button type="button" class="btn btn-sm px-4 py-1.5" @click="handleClose">
+            {{ t('common.close') }}
+          </button>
+          <button
+            v-if="isDirty"
+            type="button"
+            class="btn btn-primary btn-sm px-4 py-1.5"
+            :disabled="saving"
+            @click="handleSave"
+          >
+            <Icon v-if="saving" name="refresh" size="sm" class="mr-1 animate-spin" />
+            {{ t('common.save') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </BaseDialog>
+
+</template>
+
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useAppStore } from '@/stores/app'
+import { adminAPI } from '@/api/admin'
+import type { GroupRateMultiplierEntry } from '@/api/admin/groups'
+import type { AdminGroup, AdminUser } from '@/types'
+import BaseDialog from '@/components/common/BaseDialog.vue'
+import Pagination from '@/components/common/Pagination.vue'
+import Icon from '@/components/icons/Icon.vue'
+import PlatformIcon from '@/components/common/PlatformIcon.vue'
+
+interface LocalEntry extends GroupRateMultiplierEntry {}
+
+const props = defineProps<{
+  show: boolean
+  group: AdminGroup | null
+}>()
+
+const emit = defineEmits<{
+  close: []
+  success: []
+}>()
+
+const { t } = useI18n()
+const appStore = useAppStore()
+
+const loading = ref(false)
+const saving = ref(false)
+const serverEntries = ref<GroupRateMultiplierEntry[]>([])
+const localEntries = ref<LocalEntry[]>([])
+const searchQuery = ref('')
+const searchResults = ref<AdminUser[]>([])
+const showDropdown = ref(false)
+const selectedUser = ref<AdminUser | null>(null)
+const newRate = ref<number | null>(null)
+const currentPage = ref(1)
+const pageSize = ref(10)
+const batchFactor = ref<number | null>(null)
+
+let searchTimeout: ReturnType<typeof setTimeout>
+
+const platformColorClass = computed(() => {
+  switch (props.group?.platform) {
+    case 'anthropic': return 'text-[#d08770]/80 dark:text-[#d08770]'
+    case 'openai': return 'text-[#88c0d0]/80 dark:text-[#88c0d0]/80'
+    case 'antigravity': return 'text-[#b48ead]/80 dark:text-[#b48ead]'
+    default: return 'text-[#81a1c1]/80 dark:text-[#81a1c1]'
+  }
+})
+
+// 是否显示"最终倍率"预览列
+const showFinalRate = computed(() => {
+  return batchFactor.value != null && batchFactor.value > 0 && batchFactor.value !== 1
+})
+
+// 计算最终倍率预览
+const computeFinalRate = (rate: number | null | undefined) => {
+  const base = rate ?? props.group?.rate_multiplier ?? 1
+  if (!batchFactor.value) return base
+  return parseFloat((base * batchFactor.value).toFixed(6))
+}
+
+// 检测是否有未保存的修改
+const isDirty = computed(() => {
+  if (localEntries.value.length !== serverEntries.value.length) return true
+  const serverMap = new Map(serverEntries.value.map(e => [e.user_id, e.rate_multiplier ?? null]))
+  return localEntries.value.some(e => serverMap.get(e.user_id) !== (e.rate_multiplier ?? null))
+})
+
+const paginatedLocalEntries = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value
+  return localEntries.value.slice(start, start + pageSize.value)
+})
+
+const cloneEntries = (entries: GroupRateMultiplierEntry[]): LocalEntry[] => {
+  return entries.map(e => ({ ...e }))
+}
+
+const loadEntries = async () => {
+  if (!props.group) return
+  loading.value = true
+  try {
+    const raw = await adminAPI.groups.getGroupRateMultipliers(props.group.id)
+    // 仅显示已设置 rate_multiplier 的条目；rpm_override 在另一个弹窗管理，保留不动
+    serverEntries.value = raw.filter(e => e.rate_multiplier != null)
+    localEntries.value = cloneEntries(serverEntries.value)
+    adjustPage()
+  } catch (error) {
+    appStore.showError(t('admin.groups.failedToLoad'))
+    console.error('Error loading group rate multipliers:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+const adjustPage = () => {
+  const totalPages = Math.max(1, Math.ceil(localEntries.value.length / pageSize.value))
+  if (currentPage.value > totalPages) {
+    currentPage.value = totalPages
+  }
+}
+
+watch(() => props.show, (val) => {
+  if (val && props.group) {
+    currentPage.value = 1
+    batchFactor.value = null
+    searchQuery.value = ''
+    searchResults.value = []
+    selectedUser.value = null
+    newRate.value = null
+    loadEntries()
+  }
+})
+
+const handlePageSizeChange = (newSize: number) => {
+  pageSize.value = newSize
+  currentPage.value = 1
+}
+
+const handleSearchUsers = () => {
+  clearTimeout(searchTimeout)
+  selectedUser.value = null
+  if (!searchQuery.value.trim()) {
+    searchResults.value = []
+    showDropdown.value = false
+    return
+  }
+  searchTimeout = setTimeout(async () => {
+    try {
+      const res = await adminAPI.users.list(1, 10, { search: searchQuery.value.trim() })
+      searchResults.value = res.items
+      showDropdown.value = true
+    } catch {
+      searchResults.value = []
+    }
+  }, 300)
+}
+
+const selectUser = (user: AdminUser) => {
+  selectedUser.value = user
+  searchQuery.value = user.email
+  showDropdown.value = false
+  searchResults.value = []
+}
+
+// 本地添加（或覆盖已有用户）
+const handleAddLocal = () => {
+  if (!selectedUser.value || !newRate.value) return
+  const user = selectedUser.value
+  const idx = localEntries.value.findIndex(e => e.user_id === user.id)
+  const entry: LocalEntry = {
+    user_id: user.id,
+    user_name: user.username || '',
+    user_email: user.email,
+    user_notes: user.notes || '',
+    user_status: user.status || 'active',
+    rate_multiplier: newRate.value,
+    rpm_override: null
+  }
+  if (idx >= 0) {
+    localEntries.value[idx] = entry
+  } else {
+    localEntries.value.push(entry)
+  }
+  searchQuery.value = ''
+  selectedUser.value = null
+  newRate.value = null
+  adjustPage()
+}
+
+// 本地修改倍率
+const updateLocalRate = (userId: number, value: string) => {
+  const entry = localEntries.value.find(e => e.user_id === userId)
+  if (!entry) return
+  if (value.trim() === '') {
+    entry.rate_multiplier = null
+    return
+  }
+  const num = parseFloat(value)
+  if (isNaN(num)) return
+  entry.rate_multiplier = num
+}
+
+// 本地删除
+const removeLocal = (userId: number) => {
+  localEntries.value = localEntries.value.filter(e => e.user_id !== userId)
+  adjustPage()
+}
+
+// 批量乘数应用到本地
+const applyBatchFactor = () => {
+  if (!batchFactor.value || batchFactor.value <= 0) return
+  for (const entry of localEntries.value) {
+    if (entry.rate_multiplier != null) {
+      entry.rate_multiplier = parseFloat((entry.rate_multiplier * batchFactor.value).toFixed(6))
+    }
+  }
+  batchFactor.value = null
+}
+
+// 本地清空
+const clearAllLocal = () => {
+  localEntries.value = []
+}
+
+// 取消：恢复到服务器数据
+const handleCancel = () => {
+  localEntries.value = cloneEntries(serverEntries.value)
+  batchFactor.value = null
+  adjustPage()
+}
+
+// 保存：一次性提交所有数据（只提交 rate_multiplier；rpm_override 由独立弹窗管理）
+const handleSave = async () => {
+  if (!props.group) return
+  saving.value = true
+  try {
+    const entries = localEntries.value
+      .filter(e => e.rate_multiplier != null)
+      .map(e => ({
+        user_id: e.user_id,
+        rate_multiplier: e.rate_multiplier as number
+      }))
+    await adminAPI.groups.batchSetGroupRateMultipliers(props.group.id, entries)
+    appStore.showSuccess(t('admin.groups.rateSaved'))
+    emit('success')
+    emit('close')
+  } catch (error) {
+    appStore.showError(t('admin.groups.failedToSave'))
+    console.error('Error saving rate multipliers:', error)
+  } finally {
+    saving.value = false
+  }
+}
+
+// 关闭时如果有未保存修改，先恢复
+const handleClose = () => {
+  if (isDirty.value) {
+    localEntries.value = cloneEntries(serverEntries.value)
+  }
+  emit('close')
+}
+
+// 点击外部关闭下拉
+const handleClickOutside = () => {
+  showDropdown.value = false
+}
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('click', handleClickOutside)
+}
+</script>
+
+<style scoped>
+.hide-spinner::-webkit-outer-spin-button,
+.hide-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.hide-spinner {
+  -moz-appearance: textfield;
+}
+</style>
